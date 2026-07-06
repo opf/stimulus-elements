@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test"
-import { camelize, capitalize, readInheritableStaticObjectPairs } from "../src/helpers"
+import { camelize, capitalize, dasherize, readInheritableStaticObjectPairs } from "../src/helpers"
 
 test("camelize handles snake_case, kebab-case, and passthrough", () => {
   expect(camelize("menu_item")).toBe("menuItem")
@@ -11,6 +11,13 @@ test("camelize handles snake_case, kebab-case, and passthrough", () => {
 test("capitalize uppercases the first character", () => {
   expect(capitalize("backdrop")).toBe("Backdrop")
   expect(capitalize("")).toBe("")
+})
+
+test("dasherize splits camelCase into kebab-case", () => {
+  expect(dasherize("menuItem")).toBe("menu-item")
+  expect(dasherize("backdrop")).toBe("backdrop")
+  expect(dasherize("a")).toBe("a")
+  expect(dasherize("ariaLabelledBy")).toBe("aria-labelled-by")
 })
 
 test("readInheritableStaticObjectPairs merges own static props base-first", () => {

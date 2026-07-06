@@ -6,6 +6,10 @@ export function capitalize(value: string): string {
   return value.length === 0 ? value : value.charAt(0).toUpperCase() + value.slice(1)
 }
 
+export function dasherize(value: string): string {
+  return value.replace(/([A-Z])/g, (_match, char: string) => `-${char.toLowerCase()}`)
+}
+
 export function readInheritableStaticObjectPairs<T = unknown>(
   constructor: unknown,
   propertyName: string,
