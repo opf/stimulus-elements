@@ -70,3 +70,9 @@ class MyController extends Controller {
 `WithElements` keys must already be camelCase (matching the generated accessor
 names) — e.g. use `menuItem`, not `menu_item`, in the type argument even though
 the runtime `static elements` key may be `menu_item`.
+
+## Credits
+
+Inspired by Marco Roth's article
+[Supercharge your Stimulus controllers with custom APIs](https://marcoroth.dev/posts/supercharge-your-stimulus-controllers-with-custom-apis),
+which introduced the blessing pattern this library builds on.
