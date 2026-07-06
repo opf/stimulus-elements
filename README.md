@@ -55,6 +55,22 @@ For each entry `foo: "<selector>"` (key camelized) you get:
 Lookups are **scoped to the controller's own element**, read **live** on every
 access, and never throw — an invalid selector warns once and yields `null` / `[]`.
 
+## Overriding selectors from the DOM
+
+Any declared element's selector can be overridden per instance from the controller
+element, without changing the controller:
+
+```html
+<div data-controller="test"
+     data-test-backdrop-element=".backdrop"
+     data-test-menu-item-element=".item:not([data-disabled])"></div>
+```
+
+The attribute is `data-[identifier]-[name]-element`, where `[name]` is the element
+name in kebab-case (so `menuItem` becomes `menu-item`). When present and non-empty it
+wins over the static `elements` selector; an empty or whitespace-only value falls back
+to the static selector. Overrides are read live, like all lookups.
+
 ## TypeScript
 
 ```ts

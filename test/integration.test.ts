@@ -87,3 +87,19 @@ test("invalid selector on a live controller warns once and does not throw", asyn
   expect(warn).toHaveBeenCalledTimes(1)
   warn.mockRestore()
 })
+
+test("data-attribute override selects a different element end-to-end", async () => {
+  class OverrideController extends Controller {
+    static elements = { panel: "#default-panel" }
+  }
+  await boot(
+    "override",
+    OverrideController,
+    `<div data-controller="override" data-override-panel-element=".real-panel">
+       <div id="default-panel">default</div>
+       <div class="real-panel">real</div>
+     </div>`,
+  )
+  const ctrl = controllerFor("override")
+  expect(ctrl.panelElement.textContent).toBe("real")
+})
