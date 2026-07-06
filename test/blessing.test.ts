@@ -90,6 +90,16 @@ test("override attribute name uses the dasherized element name", () => {
   expect(ctrl.menuItemElement).toBe(host.querySelector("#backdrop"))
 })
 
+test("override attribute name is derived from a snake_case element key", () => {
+  class C {
+    static elements = { menu_item: ".item" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-menu-item-element", "#backdrop")
+  const ctrl = bless(C, host)
+  expect(ctrl.menuItemElement).toBe(host.querySelector("#backdrop"))
+})
+
 test("empty override attribute falls back to the static selector", () => {
   class C {
     static elements = { backdrop: "#backdrop" }
@@ -142,5 +152,6 @@ test("invalid override selector warns once and falls back to null / []", () => {
   const ctrl = bless(C, host)
   expect(ctrl.backdropElement).toBeNull()
   expect(ctrl.backdropElements).toEqual([])
+  expect(warn).toHaveBeenCalledTimes(1)
   warn.mockRestore()
 })

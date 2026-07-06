@@ -71,6 +71,8 @@ name in kebab-case (so `menuItem` becomes `menu-item`). When present and non-emp
 wins over the static `elements` selector; an empty or whitespace-only value falls back
 to the static selector. Overrides are read live, like all lookups.
 
+Keep element names to simple camelCase words — an embedded acronym like `htmlURL` dasherizes to `html-u-r-l`, which is hard to predict in the attribute.
+
 ## TypeScript
 
 ```ts
