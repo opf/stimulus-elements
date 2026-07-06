@@ -1,12 +1,12 @@
-import { test, expect, beforeEach } from "bun:test"
+import { test, expect, beforeEach, spyOn } from "bun:test"
 import { ElementsBlessing } from "../src/blessing"
 import { resetSelectorWarnings } from "../src/query"
 
 beforeEach(() => resetSelectorWarnings())
 
 // Apply a blessing's descriptors onto a fake controller bound to `element`.
-function bless(constructor: unknown, element: Element): any {
-  const target: any = { element }
+function bless(constructor: unknown, element: Element, identifier = "test"): any {
+  const target: any = { element, identifier }
   Object.defineProperties(target, ElementsBlessing(constructor))
   return target
 }
@@ -68,4 +68,79 @@ test("subclass overrides parent selector (later-wins)", () => {
   const ctrl = bless(Child, host)
   // Child's ".item" wins over Base's "#backdrop"
   expect(ctrl.thingElement).toBe(host.querySelector(".item"))
+})
+
+test("override attribute wins over the static selector", () => {
+  class C {
+    static elements = { backdrop: "#backdrop" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-backdrop-element", ".item")
+  const ctrl = bless(C, host)
+  expect(ctrl.backdropElement).toBe(host.querySelector(".item"))
+})
+
+test("override attribute name uses the dasherized element name", () => {
+  class C {
+    static elements = { menuItem: ".item" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-menu-item-element", "#backdrop")
+  const ctrl = bless(C, host)
+  expect(ctrl.menuItemElement).toBe(host.querySelector("#backdrop"))
+})
+
+test("empty override attribute falls back to the static selector", () => {
+  class C {
+    static elements = { backdrop: "#backdrop" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-backdrop-element", "")
+  const ctrl = bless(C, host)
+  expect(ctrl.backdropElement).toBe(host.querySelector("#backdrop"))
+})
+
+test("whitespace-only override attribute falls back to the static selector", () => {
+  class C {
+    static elements = { backdrop: "#backdrop" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-backdrop-element", "   ")
+  const ctrl = bless(C, host)
+  expect(ctrl.backdropElement).toBe(host.querySelector("#backdrop"))
+})
+
+test("override is read live — changing the attribute changes resolution", () => {
+  class C {
+    static elements = { thing: "#backdrop" }
+  }
+  const host = fixture()
+  const ctrl = bless(C, host)
+  expect(ctrl.thingElement).toBe(host.querySelector("#backdrop"))
+  host.setAttribute("data-test-thing-element", ".item")
+  expect(ctrl.thingElement).toBe(host.querySelector(".item"))
+})
+
+test("override applies to plural and has accessors", () => {
+  class C {
+    static elements = { backdrop: "#backdrop" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-backdrop-element", ".item")
+  const ctrl = bless(C, host)
+  expect(ctrl.backdropElements.length).toBe(2)
+  expect(ctrl.hasBackdropElement).toBe(true)
+})
+
+test("invalid override selector warns once and falls back to null / []", () => {
+  const warn = spyOn(console, "warn").mockImplementation(() => {})
+  class C {
+    static elements = { backdrop: "#backdrop" }
+  }
+  const host = fixture()
+  host.setAttribute("data-test-backdrop-element", "###")
+  const ctrl = bless(C, host)
+  expect(ctrl.backdropElement).toBeNull()
+  expect(ctrl.backdropElements).toEqual([])
+  warn.mockRestore()
 })
