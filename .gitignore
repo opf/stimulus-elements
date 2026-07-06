@@ -141,3 +141,12 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (macOS) folder config
+.DS_Store
+
+# Superpowers SDD scratch (briefs, reports, ledger, review packages)
+.superpowers/

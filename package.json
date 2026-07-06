@@ -1,0 +1,34 @@
+{
+  "name": "@openproject/stimulus-elements",
+  "version": "0.1.0",
+  "description": "Declarative, controller-scoped element lookups for Stimulus — like targets, backed by any CSS selector.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "bun build ./index.ts --outdir dist --format esm --external @hotwired/stimulus && tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build",
+    "test": "bun test"
+  },
+  "keywords": ["stimulus", "hotwired", "elements", "blessing", "dom"],
+  "license": "MIT",
+  "publishConfig": { "access": "public" },
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.2"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.2",
+    "@happy-dom/global-registrator": "^20.10.6",
+    "@types/bun": "latest",
+    "typescript": "^5"
+  }
+}
