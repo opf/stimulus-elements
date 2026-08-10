@@ -142,6 +142,64 @@ test("override applies to plural and has accessors", () => {
   expect(ctrl.hasBackdropElement).toBe(true)
 })
 
+// Characterization: acronym keys keep Stimulus's naive dasherization —
+// `htmlURL` maps to the attribute suffix `html-u-r-l`. Locked-in behaviour.
+test("acronym key yields naive-dasherized override attribute", () => {
+  class C {
+    static elements = { htmlURL: "#backdrop" }
+  }
+  const host = fixture()
+  const ctrl = bless(C, host)
+  expect(ctrl.htmlURLElement).toBe(host.querySelector("#backdrop"))
+  expect(ctrl.hasHtmlURLElement).toBe(true)
+
+  host.setAttribute("data-test-html-u-r-l-element", ".item")
+  expect(ctrl.htmlURLElement).toBe(host.querySelector(".item"))
+})
+
+test("subclass same-key override does not warn", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
+  class Base {
+    static elements = { thing: "#backdrop" }
+  }
+  class Child extends Base {
+    static override elements = { thing: ".item" }
+  }
+  bless(Child, fixture())
+  expect(warn).not.toHaveBeenCalled()
+  warn.mockRestore()
+})
+
+test("cross-key predicate collision warns; both getters stay, later predicate wins", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
+  class C {
+    // foo and _foo produce distinct getters but the same hasFooElement predicate
+    static elements = { foo: ".nope", _foo: "#backdrop" }
+  }
+  const host = fixture()
+  const ctrl = bless(C, host)
+  expect(ctrl.fooElement).toBeNull()
+  expect(ctrl.FooElement).toBe(host.querySelector("#backdrop"))
+  // later key (_foo, "#backdrop") wins the shared predicate property
+  expect(ctrl.hasFooElement).toBe(true)
+  expect(warn).toHaveBeenCalledTimes(1)
+  warn.mockRestore()
+})
+
+test("cross-kind collision warns; hasFooElement resolves to later key's getter", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
+  class C {
+    // foo's predicate hasFooElement vs hasFoo's singular getter hasFooElement
+    static elements = { foo: ".item", hasFoo: "#backdrop" }
+  }
+  const host = fixture()
+  const ctrl = bless(C, host)
+  // later definition's getter shadows the predicate: Element, not boolean
+  expect(ctrl.hasFooElement).toBe(host.querySelector("#backdrop"))
+  expect(warn).toHaveBeenCalledTimes(1)
+  warn.mockRestore()
+})
+
 test("invalid override selector warns once and falls back to null / []", () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
   class C {

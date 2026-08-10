@@ -92,9 +92,9 @@ class MyController extends Controller {
 }
 ```
 
-`WithElements` keys must already be camelCase (matching the generated accessor
-names) — e.g. use `menuItem`, not `menu_item`, in the type argument even though
-the runtime `static elements` key may be `menu_item`.
+`WithElements` camelizes keys exactly like the runtime, so you can pass your
+`static elements` keys verbatim — `menu_item` and `menuItem` both yield
+`menuItemElement` / `menuItemElements` / `hasMenuItemElement`.
 
 ## Releasing
 
