@@ -1,7 +1,14 @@
 # stimulus-elements
 
 Declarative, controller-scoped element lookups for Stimulus — like `targets`,
-but backed by any CSS selector.
+but backed by any CSS selector. Built on the controller-blessing pattern
+created by [Marco Roth](https://marcoroth.dev), with code adapted from his
+article [Supercharge your Stimulus controllers with custom APIs](https://marcoroth.dev/posts/supercharge-your-stimulus-controllers-with-custom-apis).
+
+> [!IMPORTANT]
+> This library is currently used internally at OpenProject and is under
+> active development. There is no public roadmap yet — expect APIs to change
+> without notice.
 
 ## Install
 
@@ -91,6 +98,6 @@ the runtime `static elements` key may be `menu_item`.
 
 ## Credits
 
-Inspired by Marco Roth's article
+Adapted from Marco Roth's article
 [Supercharge your Stimulus controllers with custom APIs](https://marcoroth.dev/posts/supercharge-your-stimulus-controllers-with-custom-apis),
 which introduced the blessing pattern this library builds on.
