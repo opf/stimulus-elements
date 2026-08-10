@@ -15,12 +15,13 @@
   "files": ["dist", "README.md"],
   "sideEffects": false,
   "scripts": {
-    "build": "bun build ./index.ts --outdir dist --format esm --external @hotwired/stimulus && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && bun build ./index.ts --outdir dist --format esm --external @hotwired/stimulus && tsc -p tsconfig.build.json",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "prepublishOnly": "bun run build",
     "release": "bun run build && changeset publish",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": ["stimulus", "hotwired", "elements", "blessing", "dom"],
   "license": "MIT",

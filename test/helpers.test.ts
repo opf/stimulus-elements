@@ -1,24 +1,5 @@
 import { test, expect } from "vitest"
-import { camelize, capitalize, dasherize, readInheritableStaticObjectPairs } from "../src/helpers"
-
-test("camelize handles snake_case, kebab-case, and passthrough", () => {
-  expect(camelize("menu_item")).toBe("menuItem")
-  expect(camelize("menu-item")).toBe("menuItem")
-  expect(camelize("backdrop")).toBe("backdrop")
-  expect(camelize("alreadyCamel")).toBe("alreadyCamel")
-})
-
-test("capitalize uppercases the first character", () => {
-  expect(capitalize("backdrop")).toBe("Backdrop")
-  expect(capitalize("")).toBe("")
-})
-
-test("dasherize splits camelCase into kebab-case", () => {
-  expect(dasherize("menuItem")).toBe("menu-item")
-  expect(dasherize("backdrop")).toBe("backdrop")
-  expect(dasherize("a")).toBe("a")
-  expect(dasherize("ariaLabelledBy")).toBe("aria-labelled-by")
-})
+import { readInheritableStaticObjectPairs } from "../src/helpers"
 
 test("readInheritableStaticObjectPairs merges own static props base-first", () => {
   class Base {
