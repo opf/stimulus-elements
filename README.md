@@ -29,7 +29,11 @@ installElements()
 `installElements()` must run before you register any controllers / call
 `Application.start()` — blessings are snapshotted per controller at
 registration time, so installing afterward yields controllers without the
-accessors.
+accessors. This failure is **silent**: Stimulus leaves no trace of earlier
+registrations the library could detect and warn about, so there is no
+runtime error — the accessors are simply `undefined`. Calling
+`installElements()` more than once is safe, including from two bundled
+copies of this package.
 
 ## Usage
 
