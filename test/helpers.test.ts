@@ -1,4 +1,4 @@
-import { test, expect } from "bun:test"
+import { test, expect } from "vitest"
 import { camelize, capitalize, dasherize, readInheritableStaticObjectPairs } from "../src/helpers"
 
 test("camelize handles snake_case, kebab-case, and passthrough", () => {

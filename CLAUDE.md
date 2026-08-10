@@ -21,10 +21,16 @@ Default to using Bun instead of Node.js.
 
 ## Testing
 
-Use `bun test` to run tests.
+**Exception to the Bun default:** this repo tests with vitest browser mode
+(`bun run test` → `vitest run`), executing the suite in real Chromium via
+Playwright. Reason: selector semantics are this library's core domain, and
+DOM emulators (happy-dom) diverge from spec exactly there — `querySelector`
+subtree restriction hid a real scoping bug. Do not migrate tests back to
+`bun test`, and import from `"vitest"` (with `vi.spyOn` for spies), not
+`"bun:test"`.
 
-```ts#index.test.ts
-import { test, expect } from "bun:test";
+```ts#example.test.ts
+import { test, expect } from "vitest";
 
 test("hello world", () => {
   expect(1).toBe(1);
