@@ -1,4 +1,4 @@
-import { test, expect, beforeEach, afterEach, spyOn } from "bun:test"
+import { test, expect, beforeEach, afterEach, vi } from "vitest"
 import { Application, Controller } from "@hotwired/stimulus"
 import { installElements } from "../src/install"
 import { resetSelectorWarnings } from "../src/query"
@@ -76,7 +76,7 @@ test("selectors are scoped per controller — no cross-controller leakage", asyn
 })
 
 test("invalid selector on a live controller warns once and does not throw", async () => {
-  const warn = spyOn(console, "warn").mockImplementation(() => {})
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
   class BadController extends Controller {
     static elements = { oops: "###" }
   }

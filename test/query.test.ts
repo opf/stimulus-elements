@@ -1,4 +1,4 @@
-import { test, expect, beforeEach, spyOn } from "bun:test"
+import { test, expect, beforeEach, vi } from "vitest"
 import { queryOne, queryAll, resetSelectorWarnings } from "../src/query"
 
 beforeEach(() => {
@@ -41,7 +41,7 @@ test("queryAll returns [] when nothing matches", () => {
 })
 
 test("missing root returns null / [] without warning", () => {
-  const warn = spyOn(console, "warn")
+  const warn = vi.spyOn(console, "warn")
   expect(queryOne(null, ".item")).toBeNull()
   expect(queryAll(undefined, ".item")).toEqual([])
   expect(warn).not.toHaveBeenCalled()
@@ -49,7 +49,7 @@ test("missing root returns null / [] without warning", () => {
 })
 
 test("invalid selector warns once and returns null / []", () => {
-  const warn = spyOn(console, "warn").mockImplementation(() => {})
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
   expect(queryOne(root(), "###")).toBeNull()
   expect(queryAll(root(), "###")).toEqual([])
   expect(warn).toHaveBeenCalledTimes(1) // once per selector, across both calls
@@ -57,7 +57,7 @@ test("invalid selector warns once and returns null / []", () => {
 })
 
 test("empty / whitespace selector warns once and returns null / []", () => {
-  const warn = spyOn(console, "warn").mockImplementation(() => {})
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
   expect(queryOne(root(), "   ")).toBeNull()
   expect(queryAll(root(), "   ")).toEqual([])
   expect(warn).toHaveBeenCalledTimes(1)

@@ -1,4 +1,4 @@
-import { test, expect, beforeEach, spyOn } from "bun:test"
+import { test, expect, beforeEach, vi } from "vitest"
 import { ElementsBlessing } from "../src/blessing"
 import { resetSelectorWarnings } from "../src/query"
 
@@ -143,7 +143,7 @@ test("override applies to plural and has accessors", () => {
 })
 
 test("invalid override selector warns once and falls back to null / []", () => {
-  const warn = spyOn(console, "warn").mockImplementation(() => {})
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
   class C {
     static elements = { backdrop: "#backdrop" }
   }
