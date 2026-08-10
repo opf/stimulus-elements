@@ -16,18 +16,25 @@
   "sideEffects": false,
   "scripts": {
     "build": "bun build ./index.ts --outdir dist --format esm --external @hotwired/stimulus && tsc -p tsconfig.build.json",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
     "prepublishOnly": "bun run build",
+    "release": "bun run build && changeset publish",
     "test": "bun test"
   },
   "keywords": ["stimulus", "hotwired", "elements", "blessing", "dom"],
   "license": "MIT",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@hotwired/stimulus": "^3.2"
   },
   "devDependencies": {
-    "@hotwired/stimulus": "^3.2",
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.1",
     "@happy-dom/global-registrator": "^20.10.6",
+    "@hotwired/stimulus": "^3.2",
     "@types/bun": "latest",
     "typescript": "^5"
   }

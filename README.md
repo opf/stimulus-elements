@@ -96,6 +96,14 @@ class MyController extends Controller {
 names) — e.g. use `menuItem`, not `menu_item`, in the type argument even though
 the runtime `static elements` key may be `menu_item`.
 
+## Releasing
+
+Releases are driven by [changesets](https://github.com/changesets/changesets).
+When your PR changes published behaviour, run `bunx changeset` and commit the
+generated file alongside your change. On merge to `main`, a "Release Tracking"
+PR collects pending changesets; merging that PR bumps the version, updates
+`CHANGELOG.md`, and publishes to npm (via OIDC trusted publishing — no tokens).
+
 ## Credits
 
 Adapted from Marco Roth's article
