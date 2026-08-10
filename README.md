@@ -62,6 +62,12 @@ For each entry `foo: "<selector>"` (key camelized) you get:
 Lookups are **scoped to the controller's own element**, read **live** on every
 access, and never throw — an invalid selector warns once and yields `null` / `[]`.
 
+Scoping is anchored: every selector (and every comma-separated alternative in
+it) is evaluated as if prefixed with `:scope`, so combinators cannot reach
+through ancestors outside the controller element — `.menu li` only matches
+when `.menu` itself is inside the controller. Selectors starting with
+`:scope` are left untouched, and relative selectors like `> li` work as-is.
+
 ## Overriding selectors from the DOM
 
 Any declared element's selector can be overridden per instance from the controller
@@ -79,6 +85,17 @@ wins over the static `elements` selector; an empty or whitespace-only value fall
 to the static selector. Overrides are read live, like all lookups.
 
 Keep element names to simple camelCase words — an embedded acronym like `htmlURL` dasherizes to `html-u-r-l`, which is hard to predict in the attribute.
+
+### Security
+
+Selector evaluation is read-only and fails closed, and results are always
+descendants of the controller element. Override attributes carry the same
+trust level as any Stimulus `data-*` attribute: markup that can inject
+`data-*-element` attributes can already inject `data-controller` and
+`data-action`, which is strictly more powerful. If you sanitize user-supplied
+HTML, strip or allowlist `data-*` attributes. If you build selector values
+from user input yourself, escape the dynamic parts with
+[`CSS.escape()`](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape_static).
 
 ## TypeScript
 
