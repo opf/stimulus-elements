@@ -38,7 +38,7 @@
     "@types/bun": "latest",
     "@vitest/browser-playwright": "^4.1.10",
     "playwright": "^1.62.1",
-    "typescript": "^5",
+    "typescript": "^7",
     "vitest": "^4.1.10"
   }
 }
