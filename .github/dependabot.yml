@@ -1,10 +1,13 @@
 version: 2
 
-# Bun lockfile support (bun.lock) is still gated behind the beta flag.
+# Bun version updates are GA, but some updates are still reported as
+# impossible without this flag, and it is inert otherwise.
 enable-beta-ecosystems: true
 
 updates:
-  - package-ecosystem: npm
+  # bun, not npm: npm routes updates through the npm/yarn code path, which
+  # leaves bun.lock untouched and breaks `bun install --frozen-lockfile`.
+  - package-ecosystem: bun
     directory: /
     schedule:
       interval: weekly
