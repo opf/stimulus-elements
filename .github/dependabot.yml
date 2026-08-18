@@ -1,0 +1,37 @@
+version: 2
+
+# Bun lockfile support (bun.lock) is still gated behind the beta flag.
+enable-beta-ecosystems: true
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Peer dependency: bumping it here would misrepresent the range we
+      # actually support. Widen it by hand instead.
+      - dependency-name: "@hotwired/stimulus"
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns:
+          - "*"
+    labels:
+      - dependencies
+      - ci
