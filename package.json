@@ -32,7 +32,7 @@
     "@hotwired/stimulus": "^3.2"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
     "@hotwired/stimulus": "^3.2",
     "@types/bun": "latest",
