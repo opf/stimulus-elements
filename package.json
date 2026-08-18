@@ -1,6 +1,6 @@
 {
   "name": "@openproject/stimulus-elements",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Declarative, controller-scoped element lookups for Stimulus — like targets, backed by any CSS selector.",
   "type": "module",
   "main": "./dist/index.js",
