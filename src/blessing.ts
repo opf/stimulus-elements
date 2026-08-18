@@ -1,6 +1,6 @@
 import { readInheritableStaticObjectPairs } from "./helpers"
 import { mergeElementDefinitions, type ElementDefinition } from "./element-definition"
-import { queryOne, queryAll } from "./query"
+import { scopedQuery } from "./query"
 
 interface ElementScope {
   element: Element
@@ -28,20 +28,22 @@ function propertiesForElementDefinition(
   selector: string,
 ): PropertyDescriptorMap {
   const attrSuffix = def.attributeSuffix
+  const query = (scope: ElementScope) =>
+    scopedQuery(scope.element, resolveSelector(scope, attrSuffix, selector))
   return {
     [def.getterName]: {
       get(this: ElementScope): Element | null {
-        return queryOne(this.element, resolveSelector(this, attrSuffix, selector))
+        return query(this).first()
       },
     },
     [def.pluralName]: {
       get(this: ElementScope): Element[] {
-        return queryAll(this.element, resolveSelector(this, attrSuffix, selector))
+        return query(this).all()
       },
     },
     [def.predicateName]: {
       get(this: ElementScope): boolean {
-        return queryOne(this.element, resolveSelector(this, attrSuffix, selector)) !== null
+        return query(this).exists()
       },
     },
   }

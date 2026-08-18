@@ -1,8 +1,5 @@
-import { test, expect, beforeEach, vi } from "vitest"
+import { test, expect, vi } from "vitest"
 import { ElementsBlessing } from "../src/blessing"
-import { resetSelectorWarnings } from "../src/query"
-
-beforeEach(() => resetSelectorWarnings())
 
 // Apply a blessing's descriptors onto a fake controller bound to `element`.
 function bless(constructor: unknown, element: Element, identifier = "test"): any {
