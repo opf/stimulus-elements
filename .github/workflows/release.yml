@@ -31,8 +31,12 @@ jobs:
       - name: Create Release PR or publish
         uses: changesets/action@v2
         with:
-          title: Release Tracking
-          version: bun run changeset:version
-          publish: bun run release
+          # changesets/action v2 renamed these inputs.
+          pr-title: Release Tracking
+          version-script: bun run changeset:version
+          publish-script: bun run release
         env:
+          # Read by @changesets/changelog-github, not by the action itself:
+          # v2 takes its own token through the github-token input, which
+          # defaults to the workflow token.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
