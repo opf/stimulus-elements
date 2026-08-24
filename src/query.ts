@@ -1,52 +1,58 @@
-const warnedSelectors = new Set<string>()
+const warnedByRoot = new WeakMap<Element, Set<string>>()
 
-function warnOnce(selector: string, reason: unknown): void {
-  if (warnedSelectors.has(selector)) return
-  warnedSelectors.add(selector)
+function warnOnce(root: Element, selector: string, reason: unknown): void {
+  let seen = warnedByRoot.get(root)
+  if (!seen) {
+    seen = new Set()
+    warnedByRoot.set(root, seen)
+  }
+  if (seen.has(selector)) return
+  seen.add(selector)
   console.warn(
     `[stimulus-elements] Ignoring invalid selector ${JSON.stringify(selector)}:`,
     reason,
   )
 }
 
-function isNonEmptySelector(selector: string): boolean {
-  return typeof selector === "string" && selector.trim().length > 0
+export interface ScopedQuery {
+  first(): Element | null
+  all(): Element[]
+  exists(): boolean
 }
 
-export function resetSelectorWarnings(): void {
-  warnedSelectors.clear()
+const EMPTY_QUERY: ScopedQuery = {
+  first: () => null,
+  all: () => [],
+  exists: () => false,
 }
 
-export function queryOne(
+export function scopedQuery(
   root: Element | null | undefined,
   selector: string,
-): Element | null {
-  if (!root) return null
-  if (!isNonEmptySelector(selector)) {
-    warnOnce(selector, "selector is empty")
-    return null
+): ScopedQuery {
+  if (!root) return EMPTY_QUERY
+  if (typeof selector !== "string" || selector.trim().length === 0) {
+    warnOnce(root, selector, "selector is empty")
+    return EMPTY_QUERY
   }
-  try {
-    return root.querySelector(selector)
-  } catch (error) {
-    warnOnce(selector, error)
-    return null
+  const first = (): Element | null => {
+    try {
+      return root.querySelector(selector)
+    } catch (error) {
+      warnOnce(root, selector, error)
+      return null
+    }
   }
-}
-
-export function queryAll(
-  root: Element | null | undefined,
-  selector: string,
-): Element[] {
-  if (!root) return []
-  if (!isNonEmptySelector(selector)) {
-    warnOnce(selector, "selector is empty")
-    return []
-  }
-  try {
-    return Array.from(root.querySelectorAll(selector))
-  } catch (error) {
-    warnOnce(selector, error)
-    return []
+  return {
+    first,
+    all() {
+      try {
+        return Array.from(root.querySelectorAll(selector))
+      } catch (error) {
+        warnOnce(root, selector, error)
+        return []
+      }
+    },
+    exists: () => first() !== null,
   }
 }

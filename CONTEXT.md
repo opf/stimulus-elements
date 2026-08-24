@@ -25,6 +25,11 @@ Stimulus's mechanism for extending controllers at registration time.
 `ElementsBlessing` (`src/blessing.ts`) turns `static elements` into the
 accessor triples via element definitions.
 
+**Scoped query**
+The single DOM-lookup module (`src/query.ts`): `scopedQuery(root, selector)`
+returns `{ first, all, exists }`. Owns the falsy-root guard, invalid-selector
+handling, and the warn-once policy; callers never see those concerns.
+
 ## Recorded decisions
 
 - **Acronym lock-in.** Dasherization is naive and Stimulus-compatible:
@@ -40,6 +45,10 @@ accessor triples via element definitions.
   boolean | Element | null`), forcing callers to narrow. An intersection was
   rejected: it is silently assignable to *both* roles on reads, hiding the
   pathology instead of surfacing it.
+- **Warn-once is per root element.** The invalid-selector warning registry
+  is a `WeakMap` keyed by the query root, not a process-global set. Lifetime
+  is an implementation detail: warnings die with the element, tests need no
+  reset hook, and each controller element reports a bad selector once.
 - **Type/runtime lockstep.** `Camelize<K>` mirrors the runtime `camelize`
   regex exactly (ASCII-only, tail-recursive). Twin sample tables live in
   `test/element-definition.test.ts` and `test/types.test-d.ts` — keep in sync.

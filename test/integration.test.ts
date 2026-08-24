@@ -1,12 +1,10 @@
 import { test, expect, beforeEach, afterEach, vi } from "vitest"
 import { Application, Controller } from "@hotwired/stimulus"
 import { installElements } from "../src/install"
-import { resetSelectorWarnings } from "../src/query"
 
 let app: Application
 
 beforeEach(() => {
-  resetSelectorWarnings()
   installElements()
 })
 
