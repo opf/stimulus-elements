@@ -15,21 +15,24 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Full history so changesets can generate changelogs with the
           # correct commits.
           fetch-depth: 0
-      - uses: oven-sh/setup-bun@v2
+          # changesets/action pushes through the GitHub API rather than the
+          # git CLI, so it does not need the checkout credentials.
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
       # changeset publish shells out to npm, which handles the OIDC token
       # exchange with the registry (npm >= 11.5.1, bundled with Node 24).
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
       - run: bun install --frozen-lockfile
       - name: Create Release PR or publish
-        uses: changesets/action@v2
+        uses: changesets/action@198f833dd7d863100ea6e28967bc9a9fdefadb0a # v2.1.0
         with:
           # changesets/action v2 renamed these inputs.
           pr-title: Release Tracking
